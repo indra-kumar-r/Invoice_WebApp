@@ -23,7 +23,7 @@
             <div class="company-name text-dark fs-4 fw-bold">
               {{ companyDetails.name }}
             </div>
-            <div class="company-address text-secondary">
+            <div class="company-address fw-bold">
               {{ companyDetails.address }}
             </div>
             <div class="company-gst fs-6 fw-bold">
@@ -33,11 +33,9 @@
         </div>
 
         <div class="tax-invoice-title">
-          <span class="text-secondary fs-1 fw-bolder text-uppercase"
-            >Tax Invoice</span
-          >
+          <span class="fs-1 fw-bolder text-uppercase"> Tax Invoice </span>
 
-          <div class="mobile text-secondary">
+          <div class="mobile fw-bold">
             <div>Mob:</div>
 
             <div class="numbers">
@@ -51,12 +49,12 @@
 
       <div class="content-section">
         <div class="info-section text-dark">
-          <div class="receiver-info-section">
+          <div class="receiver-info-section fw-bold">
             <div class="receiver-company-name">{{ invoice.company_name }}</div>
 
             <div class="receiver-address">{{ invoice.company_address }}</div>
 
-            <div class="receiver-gst fw-bold">
+            <div class="receiver-gst">
               Party GSTIN No: {{ invoice.company_gst_no }}
             </div>
           </div>
@@ -73,7 +71,7 @@
 
             <div class="invoice-date">
               Date:
-              <span class="fw-bold">{{ invoice.date | formatDate }}</span>
+              <span class="fs-6 fw-bold">{{ invoice.date | formatDate }}</span>
             </div>
           </div>
         </div>
@@ -81,7 +79,7 @@
         <div class="extras-section">
           <ng-container *ngIf="invoice.dc_nos">
             <div class="invoice-dc-nos text-dark">
-              DC Nos:
+              DC No:
               <span class="fw-bold">
                 {{ invoice.dc_nos.join(" / ") }}
               </span>
@@ -90,7 +88,7 @@
 
           <ng-container *ngIf="invoice.order_nos">
             <div class="invoice-order-nos text-dark">
-              Order Nos:
+              Order No: #
               <span class="fw-bold">
                 {{ invoice.order_nos.join(" / ") }}
               </span>
@@ -100,9 +98,7 @@
 
         <div class="items-section">
           <div class="items-list">
-            <div
-              class="list-header text-secondary text-bg-light py-2 px-2 fw-bold"
-            >
+            <div class="list-header py-2 px-2 fw-bold">
               <div class="name">Name</div>
               <div class="quantity">Quantity</div>
               <div class="rate">Rate</div>
@@ -110,10 +106,10 @@
             </div>
 
             <div
-              class="list-item text-bg-light py-2 px-2"
+              class="list-item py-2 px-2 fw-bold"
               *ngFor="let item of invoice.invoice_items; let i = index"
             >
-              <div class="name fw-bold">{{ item.name }}</div>
+              <div class="name">{{ item.name }}</div>
               <div class="quantity">{{ item.quantity }}</div>
               <div class="rate">{{ item.rate }} ₹</div>
               <div class="amount">{{ item.amount }} ₹</div>
@@ -142,7 +138,7 @@
           </div>
 
           <div class="total-amount-section">
-            <div class="label-section text-secondary fw-bold">
+            <div class="label-section fw-bold">
               <div>Total</div>
               <ng-container *ngIf="invoice.sgst">
                 <div>SGST {{ invoice.sgst_rate }}%</div>
@@ -181,16 +177,15 @@
       </div>
 
       <div class="footer-section">
-        <div class="conditions">
+        <div class="conditions fw-bold">
           <div
-            class="text-secondary"
             *ngFor="let condition of companyDetails.conditions; let i = index"
           >
             {{ i + 1 }}. {{ condition }}
           </div>
         </div>
 
-        <div class="signatures text-secondary fw-bold">
+        <div class="signatures fw-bold">
           <div class="signature-section">
             <div class="signature-area"></div>
             <div class="label">Receiver's Signature</div>

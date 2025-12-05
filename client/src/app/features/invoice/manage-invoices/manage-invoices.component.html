@@ -31,17 +31,6 @@
       </div>
 
       <div class="invoices-options">
-        <button
-          class="btn btn-light fw-bolder text-success filter"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasFilters"
-          aria-controls="offcanvasFilters"
-          (click)="isFiltersCanvasOpen = !isFiltersCanvasOpen"
-        >
-          Filters
-        </button>
-
         <div class="search bg-body-light">
           <input
             class="text-secondary fw-bold"
@@ -55,6 +44,17 @@
             <i class="bi bi-search"></i>
           </div>
         </div>
+
+        <button
+          class="btn btn-light fw-bolder text-success filter"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasFilters"
+          aria-controls="offcanvasFilters"
+          (click)="isFiltersCanvasOpen = !isFiltersCanvasOpen"
+        >
+          Filters
+        </button>
       </div>
     </div>
 
