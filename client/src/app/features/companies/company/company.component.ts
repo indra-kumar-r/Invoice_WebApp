@@ -84,8 +84,14 @@ export class CompanyComponent implements OnInit, OnDestroy {
   createCompany(): void {
     if (this.companyForm.invalid) return;
 
+    const company = {
+      company_name: this.companyForm.value.company_name.toUpperCase(),
+      company_address: this.companyForm.value.company_address.toUpperCase(),
+      company_gst_no: this.companyForm.value.company_gst_no.toUpperCase(),
+    };
+
     this.companyService
-      .createCompany(this.companyForm.value)
+      .createCompany(company as Company)
       .pipe(
         tap(() => {
           this.router.navigate(['/companies']);
@@ -104,8 +110,14 @@ export class CompanyComponent implements OnInit, OnDestroy {
   updateCompany(): void {
     if (this.companyForm.invalid) return;
 
+    const company = {
+      company_name: this.companyForm.value.company_name.toUpperCase(),
+      company_address: this.companyForm.value.company_address.toUpperCase(),
+      company_gst_no: this.companyForm.value.company_gst_no.toUpperCase(),
+    };
+
     this.companyService
-      .updateCompany(this.companyId, this.companyForm.value)
+      .updateCompany(this.companyId, company as Company)
       .pipe(
         tap(() => {
           this.router.navigate(['/companies']);
