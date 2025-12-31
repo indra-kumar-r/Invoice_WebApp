@@ -5,14 +5,20 @@
     </div>
 
     <div class="options">
-      <div>
-        <div
-          class="btn btn-light btn-sm py-2 px-4 text-success fw-bolder d-flex gap-6"
-          (click)="createInvoice()"
-        >
-          <i class="bi bi-plus"></i>
-          <span>Create Invoice</span>
-        </div>
+      <div
+        class="btn btn-light btn-sm py-2 px-4 text-success fw-bolder d-flex gap-6"
+        (click)="createInvoice()"
+      >
+        <i class="bi bi-plus"></i>
+        <span>Create Invoice</span>
+      </div>
+
+      <div
+        class="btn btn-light btn-sm py-2 px-4 text-success fw-bolder d-flex gap-6"
+        (click)="showGstModal = true"
+      >
+        <i class="bi bi-plus"></i>
+        <span>View GST</span>
       </div>
     </div>
   </div>
@@ -346,5 +352,11 @@
         Apply Filters
       </div>
     </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="showGstModal">
+  <div class="gst-wrapper">
+    <app-gst (close)="showGstModal = false"></app-gst>
   </div>
 </ng-container>

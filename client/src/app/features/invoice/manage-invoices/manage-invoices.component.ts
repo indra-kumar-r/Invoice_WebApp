@@ -29,6 +29,7 @@ import {
 } from 'rxjs';
 import { FormatDatePipe } from '../../../core/pipes/format-date.pipe';
 import { ToasterService } from '../../../core/services/toaster/toaster.service';
+import { GstComponent } from '../../gst/gst.component';
 
 @Component({
   selector: 'app-manage-invoices',
@@ -39,6 +40,7 @@ import { ToasterService } from '../../../core/services/toaster/toaster.service';
     FormsModule,
     ReactiveFormsModule,
     FormatDatePipe,
+    GstComponent,
   ],
   templateUrl: './manage-invoices.component.html',
   styleUrl: './manage-invoices.component.scss',
@@ -73,6 +75,8 @@ export class ManageInvoicesComponent implements OnInit, OnDestroy {
 
   isFiltersCanvasOpen: boolean = false;
   showCompanyDropdown: boolean = false;
+
+  showGstModal: boolean = true;
 
   constructor(
     private router: Router,
