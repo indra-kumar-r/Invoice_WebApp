@@ -15,11 +15,15 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { GstService } from '../../core/services/gst/gst.service';
 import { ToasterService } from '../../core/services/toaster/toaster.service';
 import { GstDetails, GstInvoice } from '../../models/gst.model';
 import { FormatDatePipe } from '../../core/pipes/format-date.pipe';
+import { RoundNumberPipe } from '../../core/pipes/round-number.pipe';
+import * as XLSX from 'xlsx';
+import { CompanyDetails } from '../../models/shared.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-gst',
@@ -29,9 +33,11 @@ import { FormatDatePipe } from '../../core/pipes/format-date.pipe';
     ReactiveFormsModule,
     FormsModule,
     FormatDatePipe,
+    RoundNumberPipe,
   ],
   templateUrl: './gst.component.html',
   styleUrl: './gst.component.scss',
+  providers: [RoundNumberPipe, DatePipe],
 })
 export class GstComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -49,12 +55,16 @@ export class GstComponent implements OnInit, OnDestroy {
   totalCgst: number = 0;
   totalAmount: number = 0;
 
+  companyDetails: CompanyDetails = environment.companyDetails;
+
   isLoading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private gstService: GstService,
-    private toasterService: ToasterService
+    private toasterService: ToasterService,
+    private roundNumberPipe: RoundNumberPipe,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -137,5 +147,95 @@ export class GstComponent implements OnInit, OnDestroy {
     this.gstForm.reset({
       date: new Date(),
     });
+  }
+
+  getMonthName(month: number): string {
+    return new Date(2000, month - 1, 1).toLocaleString('en-US', {
+      month: 'long',
+    });
+  }
+
+  exportGst(): void {
+    const monthName = this.getMonthName(this.month).toUpperCase();
+
+    const title =
+      `${this.companyDetails.name} GST NO ${this.companyDetails.gstin} ` +
+      `SALES FOR THE MONTH OF ${monthName} - ${this.year}`;
+
+    const worksheetData: any[][] = [];
+
+    worksheetData.push([title]);
+
+    worksheetData.push([
+      'Date',
+      'Company Name / Customer Name',
+      'Invoice Number',
+      'GST Number',
+      'IGST @ 5%',
+      'CGST @ 2.5%',
+      'SGST @ 2.5%',
+      'Gross Total',
+      'Received Amount',
+      'Received Date',
+    ]);
+
+    this.gstDetails.forEach((invoice) => {
+      worksheetData.push([
+        this.datePipe.transform(invoice.date, 'dd-MM-yyyy'),
+        invoice.companyName,
+        invoice.invoiceNo,
+        invoice.companyGstNo,
+        this.roundNumberPipe.transform(invoice.igst ?? 0),
+        this.roundNumberPipe.transform(invoice.cgst ?? 0),
+        this.roundNumberPipe.transform(invoice.sgst ?? 0),
+        this.roundNumberPipe.transform(invoice.grandTotal),
+        '',
+        '',
+      ]);
+    });
+
+    worksheetData.push([]);
+
+    worksheetData.push([
+      'TOTAL',
+      '',
+      '',
+      '',
+      this.roundNumberPipe.transform(this.totalIgst),
+      this.roundNumberPipe.transform(this.totalCgst),
+      this.roundNumberPipe.transform(this.totalSgst),
+      this.roundNumberPipe.transform(this.totalAmount),
+      '',
+      '',
+    ]);
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    worksheet['!merges'] = [
+      {
+        s: { r: 0, c: 0 },
+        e: { r: 0, c: 9 },
+      },
+    ];
+
+    worksheet['!cols'] = [
+      { wch: 15 },
+      { wch: 35 },
+      { wch: 18 },
+      { wch: 20 },
+      { wch: 12 },
+      { wch: 12 },
+      { wch: 12 },
+      { wch: 15 },
+      { wch: 18 },
+      { wch: 18 },
+    ];
+
+    const workbook: XLSX.WorkBook = {
+      Sheets: { GST: worksheet },
+      SheetNames: ['GST'],
+    };
+
+    XLSX.writeFile(workbook, `GST_${monthName}_${this.year}.xlsx`);
   }
 }

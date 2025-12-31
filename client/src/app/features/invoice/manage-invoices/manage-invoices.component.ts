@@ -76,7 +76,7 @@ export class ManageInvoicesComponent implements OnInit, OnDestroy {
   isFiltersCanvasOpen: boolean = false;
   showCompanyDropdown: boolean = false;
 
-  showGstModal: boolean = true;
+  showGstModal: boolean = false;
 
   constructor(
     private router: Router,

@@ -98,6 +98,7 @@
         }
 
         .details-section {
+          width: 50%;
           height: 100%;
           display: flex;
           align-items: center;
@@ -115,7 +116,6 @@
         }
 
         .invoice-details-section {
-          width: 60%;
           align-items: flex-start;
           justify-content: flex-start;
           flex-direction: column;
@@ -133,7 +133,6 @@
         }
 
         .amount-details-section {
-          width: 40%;
           justify-content: space-between;
 
           &.pending {

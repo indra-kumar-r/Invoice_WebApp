@@ -69,29 +69,35 @@
               <div class="details-section amount-details-section">
                 <ng-container *ngIf="invoice.igst">
                   <div class="values">
-                    <div class="label">IGST:</div>
-                    <div class="value fs-6">₹ {{ invoice.igst }}</div>
+                    <div class="label">IGST :</div>
+                    <div class="value fs-6">
+                      ₹ {{ invoice.igst | roundNumber }}
+                    </div>
                   </div>
                 </ng-container>
 
                 <ng-container *ngIf="invoice.sgst">
                   <div class="values">
-                    <div class="label">SGST:</div>
-                    <div class="value fs-6">₹ {{ invoice.sgst }}</div>
+                    <div class="label">SGST :</div>
+                    <div class="value fs-6">
+                      ₹ {{ invoice.sgst | roundNumber }}
+                    </div>
                   </div>
                 </ng-container>
 
                 <ng-container *ngIf="invoice.cgst">
                   <div class="values">
-                    <div class="label">CGST:</div>
-                    <div class="value fs-6">₹ {{ invoice.cgst }}</div>
+                    <div class="label">CGST :</div>
+                    <div class="value fs-6">
+                      ₹ {{ invoice.cgst | roundNumber }}
+                    </div>
                   </div>
                 </ng-container>
 
                 <div class="values">
-                  <div class="label">TOTAL:</div>
+                  <div class="label">TOTAL :</div>
                   <div class="value text-success fs-6">
-                    ₹ {{ invoice.grandTotal }}
+                    ₹ {{ invoice.grandTotal | roundNumber }}
                   </div>
                 </div>
               </div>
@@ -112,34 +118,37 @@
             <div class="amounts">
               <ng-container *ngIf="totalIgst">
                 <div class="values">
-                  <div class="label">IGST:</div>
-                  <div class="value fs-6">₹ {{ totalIgst }}</div>
+                  <div class="label">IGST :</div>
+                  <div class="value fs-6">₹ {{ totalIgst | roundNumber }}</div>
                 </div>
               </ng-container>
 
               <ng-container *ngIf="totalSgst">
                 <div class="values">
-                  <div class="label">SGST:</div>
-                  <div class="value fs-6">₹ {{ totalSgst }}</div>
+                  <div class="label">SGST :</div>
+                  <div class="value fs-6">₹ {{ totalSgst | roundNumber }}</div>
                 </div>
               </ng-container>
 
               <ng-container *ngIf="totalCgst">
                 <div class="values">
-                  <div class="label">CGST:</div>
-                  <div class="value fs-6">₹ {{ totalCgst }}</div>
+                  <div class="label">CGST :</div>
+                  <div class="value fs-6">₹ {{ totalCgst | roundNumber }}</div>
                 </div>
               </ng-container>
 
               <div class="values">
-                <div class="label">TOTAL:</div>
-                <div class="value text-success fs-5">₹ {{ totalAmount }}</div>
+                <div class="label">TOTAL :</div>
+                <div class="value text-success fs-5">
+                  ₹ {{ totalAmount | roundNumber }}
+                </div>
               </div>
             </div>
 
             <div class="options">
               <button
                 class="btn btn-light text-success btn-sm px-3 fw-bolder custom-btn"
+                (click)="exportGst()"
               >
                 <span>EXPORT GST</span>
 
