@@ -1,0 +1,193 @@
+<div class="view-gst-wrapper">
+  <div class="header-section">
+    <div class="header-title-section text-secondary text-uppercase fw-bold">
+      GST Details
+    </div>
+
+    <div class="close-option-section" (click)="onClose()">
+      <i class="bi bi-x fs-3 text-secondary"></i>
+    </div>
+  </div>
+
+  <ng-container *ngIf="gstDetails.length > 0; else defaultContainer">
+    <ng-container *ngIf="!isLoading; else loaderContainer">
+      <div class="gst-details-section">
+        <div class="gst-details-header-section">
+          <div class="gst-counter-section text-secondary fw-bold">
+            Invoices: {{ gstDetails.length }}
+          </div>
+
+          <div class="options-section">
+            <div class="dates-section">
+              <div class="date-section d-flex gap-2 fw-bold text-secondary">
+                <div class="label">Month:</div>
+                <div class="value">{{ month }}</div>
+              </div>
+
+              <div class="date-section d-flex gap-2 fw-bold text-secondary">
+                <div class="label">Year:</div>
+                <div class="value">{{ year }}</div>
+              </div>
+            </div>
+
+            <button
+              class="btn btn-dark btn-sm px-3 fw-bolder"
+              (click)="resetState()"
+            >
+              <span>Change date/year</span>
+
+              <i class="bi bi-calendar fs-6"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="gst-details-content-section">
+          <div class="gst-detail-section" *ngFor="let invoice of gstDetails">
+            <div class="details-section invoice-details-section">
+              <div class="invoice-values">
+                <div class="values">
+                  <div class="value fs-4 text-secondary">
+                    {{ invoice.invoiceNo }}
+                  </div>
+                </div>
+
+                <div class="values">
+                  <div class="value fs-6 text-dark fw-bold">
+                    {{ invoice.date | formatDate }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="values">
+                <div class="value text-secondary company">
+                  {{ invoice.companyName }}
+                </div>
+              </div>
+            </div>
+
+            <ng-container *ngIf="invoice.grandTotal; else pendingContainer">
+              <div class="details-section amount-details-section">
+                <ng-container *ngIf="invoice.igst">
+                  <div class="values">
+                    <div class="label">IGST:</div>
+                    <div class="value fs-6">₹ {{ invoice.igst }}</div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="invoice.sgst">
+                  <div class="values">
+                    <div class="label">SGST:</div>
+                    <div class="value fs-6">₹ {{ invoice.sgst }}</div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="invoice.cgst">
+                  <div class="values">
+                    <div class="label">CGST:</div>
+                    <div class="value fs-6">₹ {{ invoice.cgst }}</div>
+                  </div>
+                </ng-container>
+
+                <div class="values">
+                  <div class="label">TOTAL:</div>
+                  <div class="value text-success fs-6">
+                    ₹ {{ invoice.grandTotal }}
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-template #pendingContainer>
+              <div class="details-section amount-details-section pending">
+                <div class="values">
+                  <div class="label text-danger fs-5">Pending</div>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
+        <ng-container *ngIf="totalAmount">
+          <div class="gst-details-amounts-section">
+            <div class="amounts">
+              <ng-container *ngIf="totalIgst">
+                <div class="values">
+                  <div class="label">IGST:</div>
+                  <div class="value fs-6">₹ {{ totalIgst }}</div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="totalSgst">
+                <div class="values">
+                  <div class="label">SGST:</div>
+                  <div class="value fs-6">₹ {{ totalSgst }}</div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="totalCgst">
+                <div class="values">
+                  <div class="label">CGST:</div>
+                  <div class="value fs-6">₹ {{ totalCgst }}</div>
+                </div>
+              </ng-container>
+
+              <div class="values">
+                <div class="label">TOTAL:</div>
+                <div class="value text-success fs-5">₹ {{ totalAmount }}</div>
+              </div>
+            </div>
+
+            <div class="options">
+              <button
+                class="btn btn-light text-success btn-sm px-3 fw-bolder custom-btn"
+              >
+                <span>EXPORT GST</span>
+
+                <i class="bi bi-cloud-arrow-down fs-5"></i>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <ng-template #loaderContainer>
+      <div class="loader-wrapper">
+        <div class="spinner-border" role="status"></div>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #defaultContainer>
+    <div class="selection-section">
+      <div class="title text-secondary text-uppercase fw-bold">
+        Select Date and Year to view GST details
+      </div>
+
+      <app-input
+        label="Date"
+        type="date"
+        [formControl]="getControl('date')"
+      ></app-input>
+
+      <button
+        class="btn btn-dark fw-bold text-uppercase custom-btn"
+        (click)="fetchGstDetails()"
+        [disabled]="!gstForm.valid"
+      >
+        Load GST Details
+      </button>
+
+      <ng-container *ngIf="month && !gstDetails.length">
+        <div class="error-section text-danger fw-bold">
+          <i class="bi bi-exclamation-diamond-fill fs-6"></i>
+
+          <div>
+            No invoices found on
+            <span class="fs-6">{{ month }}, {{ year }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+</div>
