@@ -13,3 +13,7 @@ export const InvoiceApiRoutes = {
   UPDATE: '/api/invoices/:uuid',
   DELETE: '/api/invoices/:uuid',
 };
+
+export const GstApiRoutes = {
+  GET: '/api/gst',
+};
