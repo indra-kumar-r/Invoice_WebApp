@@ -1,4 +1,10 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { catchError, finalize, of, Subject, takeUntil, tap } from 'rxjs';
 import { CommonModule, DatePipe } from '@angular/common';
 import { GstService } from '../../core/services/gst/gst.service';
@@ -23,6 +29,16 @@ export class GstComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   @Output() close = new EventEmitter<void>();
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscPressed(event: Event): void {
+    if (this.isLoading) return;
+
+    if (event instanceof KeyboardEvent) {
+      event.preventDefault();
+      this.onClose();
+    }
+  }
 
   gstDetails: GstInvoice[] = [];
 

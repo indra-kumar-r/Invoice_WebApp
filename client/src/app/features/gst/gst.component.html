@@ -21,23 +21,15 @@
           </div>
 
           <div class="options-section">
-            <div class="dates-section">
-              <div class="date-section fw-bold text-secondary">
-                <div class="label">Month :</div>
-                <div class="value fs-6 text-dark">{{ monthName }}</div>
-              </div>
-
-              <div class="date-section fw-bold text-secondary">
-                <div class="label">Year :</div>
-                <div class="value fs-6 text-dark">{{ year }}</div>
-              </div>
+            <div class="dates-section text-dark fw-bold">
+              {{ monthName }}, {{ year }}
             </div>
 
             <button
               class="btn btn-dark btn-sm px-3 fw-bolder"
               (click)="resetState()"
             >
-              <span>Change date/year</span>
+              <span>Change month/year</span>
 
               <i class="bi bi-calendar fs-6"></i>
             </button>
@@ -49,13 +41,13 @@
             <div class="details-section invoice-details-section">
               <div class="invoice-values">
                 <div class="values">
-                  <div class="value fs-4 text-secondary">
+                  <div class="value fs-4 text-dark">
                     {{ invoice.invoiceNo }}
                   </div>
                 </div>
 
                 <div class="values">
-                  <div class="value fs-6 text-dark fw-bold">
+                  <div class="value fs-6 text-secondary fw-bold">
                     {{ invoice.date | formatDate }}
                   </div>
                 </div>
