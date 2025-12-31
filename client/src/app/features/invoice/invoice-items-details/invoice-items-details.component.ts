@@ -106,7 +106,7 @@ export class InvoiceItemsDetailsComponent implements OnInit, OnDestroy {
 
     const item: InvoiceItem = this.itemForm.getRawValue();
     item.name = item.name.toUpperCase();
-    item.amount = item.quantity * item.rate;
+    item.amount = Math.round(item.quantity * item.rate);
     item.uuid = crypto.randomUUID();
 
     this.invoiceItems.push(item);
@@ -131,7 +131,7 @@ export class InvoiceItemsDetailsComponent implements OnInit, OnDestroy {
     const updated = this.itemForm.getRawValue();
     updated.name = updated.name.toUpperCase();
     updated.uuid = this.invoiceItems[this.selectedIndex].uuid;
-    updated.amount = updated.quantity * updated.rate;
+    updated.amount = Math.round(updated.quantity * updated.rate);
     this.invoiceItems[this.selectedIndex] = updated;
     this.resetItemForm();
   }
