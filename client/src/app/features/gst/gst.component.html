@@ -13,20 +13,23 @@
     <ng-container *ngIf="!isLoading; else loaderContainer">
       <div class="gst-details-section">
         <div class="gst-details-header-section">
-          <div class="gst-counter-section text-secondary fw-bold">
-            Invoices: {{ gstDetails.length }}
+          <div
+            class="gst-counter-section text-secondary fw-bold text-uppercase"
+          >
+            Invoices :
+            <span class="text-dark fs-5">{{ gstDetails.length }}</span>
           </div>
 
           <div class="options-section">
             <div class="dates-section">
-              <div class="date-section d-flex gap-2 fw-bold text-secondary">
-                <div class="label">Month:</div>
-                <div class="value">{{ month }}</div>
+              <div class="date-section fw-bold text-secondary">
+                <div class="label">Month :</div>
+                <div class="value fs-6 text-dark">{{ monthName }}</div>
               </div>
 
-              <div class="date-section d-flex gap-2 fw-bold text-secondary">
-                <div class="label">Year:</div>
-                <div class="value">{{ year }}</div>
+              <div class="date-section fw-bold text-secondary">
+                <div class="label">Year :</div>
+                <div class="value fs-6 text-dark">{{ year }}</div>
               </div>
             </div>
 
@@ -170,31 +173,24 @@
   <ng-template #defaultContainer>
     <div class="selection-section">
       <div class="title text-secondary text-uppercase fw-bold">
-        Select Date and Year to view GST details
+        Select Month and Year to proceed <span class="text-danger">*</span>
       </div>
 
-      <app-input
-        label="Date"
-        type="date"
-        [formControl]="getControl('date')"
-      ></app-input>
+      <input type="month" [(ngModel)]="selectedMonthYear" />
 
       <button
-        class="btn btn-dark fw-bold text-uppercase custom-btn"
+        class="btn btn-dark fw-bold py-2 px-3 text-uppercase custom-btn"
         (click)="fetchGstDetails()"
-        [disabled]="!gstForm.valid"
+        [disabled]="!selectedMonthYear"
       >
-        Load GST Details
+        Load
       </button>
 
       <ng-container *ngIf="month && !gstDetails.length">
-        <div class="error-section text-danger fw-bold">
+        <div class="error-section text-danger">
           <i class="bi bi-exclamation-diamond-fill fs-6"></i>
 
-          <div>
-            No invoices found on
-            <span class="fs-6">{{ month }}, {{ year }}</span>
-          </div>
+          <div>No invoices found for {{ monthName }}, {{ year }}</div>
         </div>
       </ng-container>
     </div>

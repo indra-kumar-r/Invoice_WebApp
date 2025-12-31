@@ -51,17 +51,32 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      font-size: small;
+
+      .gst-counter-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        letter-spacing: 2px;
+      }
 
       .options-section {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 32px;
-        font-size: small;
 
         .dates-section {
           display: flex;
           gap: 12px;
+
+          .date-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+          }
         }
       }
     }
@@ -188,6 +203,23 @@
 
     .title {
       letter-spacing: 2px;
+    }
+
+    input {
+      display: flex;
+      padding: 12px 64px;
+      border-radius: 42px;
+      box-shadow: 0 0 12px lightgray;
+      border: none;
+      outline: none;
+      color: #000;
+      font-size: small;
+      transition: all 0.3s ease-in-out;
+
+      &:focus,
+      &:hover {
+        transform: scale(1.05);
+      }
     }
 
     .error-section {

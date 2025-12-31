@@ -1,20 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { InputComponent } from '../../shared/input/input.component';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { catchError, finalize, of, Subject, takeUntil, tap } from 'rxjs';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { GstService } from '../../core/services/gst/gst.service';
 import { ToasterService } from '../../core/services/toaster/toaster.service';
@@ -24,31 +9,27 @@ import { RoundNumberPipe } from '../../core/pipes/round-number.pipe';
 import * as XLSX from 'xlsx';
 import { CompanyDetails } from '../../models/shared.model';
 import { environment } from '../../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { get } from 'http';
 
 @Component({
   selector: 'app-gst',
-  imports: [
-    InputComponent,
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    FormatDatePipe,
-    RoundNumberPipe,
-  ],
+  imports: [CommonModule, FormatDatePipe, RoundNumberPipe, FormsModule],
   templateUrl: './gst.component.html',
   styleUrl: './gst.component.scss',
   providers: [RoundNumberPipe, DatePipe],
 })
-export class GstComponent implements OnInit, OnDestroy {
+export class GstComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   @Output() close = new EventEmitter<void>();
 
-  gstForm!: FormGroup;
-
   gstDetails: GstInvoice[] = [];
+
+  selectedMonthYear: string = '';
   month!: number;
   year!: number;
+  monthName!: string;
 
   totalIgst: number = 0;
   totalSgst: number = 0;
@@ -60,37 +41,29 @@ export class GstComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
 
   constructor(
-    private formBuilder: FormBuilder,
     private gstService: GstService,
     private toasterService: ToasterService,
     private roundNumberPipe: RoundNumberPipe,
     private datePipe: DatePipe
   ) {}
 
-  ngOnInit(): void {
-    this.initForm();
-  }
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  initForm(): void {
-    this.gstForm = this.formBuilder.group({
-      date: [new Date(), Validators.required],
-    });
-  }
-
-  getControl(controlName: string): FormControl {
-    return this.gstForm.get(controlName) as FormControl;
-  }
-
   fetchGstDetails(): void {
+    if (!this.selectedMonthYear) {
+      this.toasterService.toast('Please select month and year');
+      return;
+    }
+
     this.isLoading = true;
 
-    const month = this.gstForm.get('date')?.value.getMonth() + 1;
-    const year = this.gstForm.get('date')?.value.getFullYear();
+    const [yearStr, monthStr] = this.selectedMonthYear.split('-');
+
+    const month = Number(monthStr);
+    const year = Number(yearStr);
 
     this.gstService
       .getGstDetails(month, year)
@@ -99,6 +72,7 @@ export class GstComponent implements OnInit, OnDestroy {
           this.month = res.month;
           this.year = res.year;
           this.gstDetails = res.data;
+          this.monthName = this.getMonthName(this.month);
 
           this.calculateTotals(res.data);
         }),
@@ -134,6 +108,8 @@ export class GstComponent implements OnInit, OnDestroy {
 
   resetState(): void {
     this.gstDetails = [];
+    this.selectedMonthYear = '';
+
     this.month = 0;
     this.year = 0;
 
@@ -143,10 +119,6 @@ export class GstComponent implements OnInit, OnDestroy {
     this.totalAmount = 0;
 
     this.isLoading = false;
-
-    this.gstForm.reset({
-      date: new Date(),
-    });
   }
 
   getMonthName(month: number): string {
@@ -237,5 +209,9 @@ export class GstComponent implements OnInit, OnDestroy {
     };
 
     XLSX.writeFile(workbook, `GST_${monthName}_${this.year}.xlsx`);
+
+    this.toasterService.toast(
+      `Exported GST for ${monthName}, ${this.year} successfully.`
+    );
   }
 }
